@@ -1,10 +1,11 @@
 import pygame
 
-from nlc_dino_runner.components import text_utils
+from nlc_dino_runner.utils import text_utils
 from nlc_dino_runner.components.dinosaur import Dinosaur
+from nlc_dino_runner.components.lives.lives_manager import LivesManager
 from nlc_dino_runner.components.obstacles.obstaclesManager import ObstaclesManager
 from nlc_dino_runner.components.powerups.power_up_manager import PowerUpManager
-from nlc_dino_runner.utils.constants import TITLE, ICON, SCREEN_WIDTH, SCREEN_HEIGHT, BG, FPS, RUNNING
+from nlc_dino_runner.utils.constants import TITLE, ICON, SCREEN_WIDTH, SCREEN_HEIGHT, BG, FPS
 
 
 class Game:
@@ -24,8 +25,10 @@ class Game:
         self.points = 0
         self.running = True
         self.death_count = 0
+        self.lives_manager = LivesManager()
 
     def run(self):
+        self.lives_manager.restart_lives()
         self.obstacle_manager.reset_obstacles()
         self.power_up_manager.reset_power_ups(self.points)
         self.points = 0
@@ -40,6 +43,7 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.playing = False
+                exit()
 
     def update(self):
         user_input = pygame.key.get_pressed()
@@ -55,6 +59,7 @@ class Game:
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
         self.power_up_manager.draw(self.screen)
+        self.lives_manager.print(self.screen)
 
         pygame.display.update()
         pygame.display.flip()
@@ -65,6 +70,7 @@ class Game:
             self.game_speed += 1
         score_element, score_element_rect = text_utils.get_score_element(self.points)
         self.screen.blit(score_element, score_element_rect)
+        self.player.check_invincibility(self.screen)
 
 
 
@@ -116,7 +122,7 @@ class Game:
         text, text_rect = text_utils.get_centered_messages('Press Any Key to Start')
         self.screen.blit(text, text_rect)
 
-        death_score, death_score_rect = text_utils.get_centered_messages('Death count: ' + str(self.death_count), height=half_screen_height + 50 )
+        death_score, death_score_rect = text_utils.get_centered_messages('Death count: ' + str(self.death_count), height=half_screen_height + 50)
         self.screen.blit(death_score, death_score_rect)
 
         self.screen.blit(ICON, ((SCREEN_WIDTH //2) - 40,  half_screen_height - 150))
