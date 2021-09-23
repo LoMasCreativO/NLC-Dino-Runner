@@ -1,16 +1,16 @@
 from nlc_dino_runner.components.lives.live import Live
-from nlc_dino_runner.utils.constants import DEFAULT_NUMBER_OF_LIFE
+from nlc_dino_runner.utils.constants import DEFAULT_NUMBER_OF_LIVES
 
 
-class LivesManager():
+class LivesManager:
     def __init__(self):
-        self.number_of_lives = DEFAULT_NUMBER_OF_LIFE
+        self.number_of_lives = DEFAULT_NUMBER_OF_LIVES
 
-    def reduce_lives(self):
+    def reduce_live(self):
         self.number_of_lives -= 1
 
     def restart_lives(self):
-        self.number_of_lives = DEFAULT_NUMBER_OF_LIFE
+        self.number_of_lives = DEFAULT_NUMBER_OF_LIVES
 
     def print(self, screen):
         dinamic_pos_x = 30
@@ -18,4 +18,3 @@ class LivesManager():
             live = Live(dinamic_pos_x)
             live.draw(screen)
             dinamic_pos_x += 27
-
